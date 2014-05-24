@@ -20,45 +20,16 @@ var hashmaps = require('neuron-hashmaps');
 
 Initializes the hashmaps from the shrinkwrap object
 
-### .add(sub_dependency_tree, options)
+### .rangeMap()
 
-```js
-hashmaps.add({
-  {
-    name: 'align'
-    version: '0.1.0',
-    dependencies: {
-      jquery: {
-        from: 'jquery@~1.9.2',
-        version: '1.9.2'
-      }
-    }
-  }
-}, {
-  replace: true
-});
-```
-
-- sub_dependency_tree `Object`
-- options `Object=`
-  - replace `Boolean` whether should replace the current dependency tree
-
-Adds a new sub tree into the current dependency tree, and updates the old one.
-
-Returns `this`
-
-### .stringify(options)
-
-- options `Object=`
-  - format `String='js'` 
-
-Returns `String` 
-
-### .get()
-
-Returns `Object`.
+Returns `Object` the range map.
 
 Gets the current range map.
+
+
+### .depsTree()
+
+Returns `Object` the deps tree
 
 ## License
 
