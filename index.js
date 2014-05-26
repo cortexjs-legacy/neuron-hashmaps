@@ -9,19 +9,19 @@ function hashmap (shrinkwrap) {
 
 function HashMap (shrinkwrap) {
   this.shrinkwrap = shrinkwrap;
-  this._rangeMap = {};
-  this._depsTree = {};
+  this._ranges = {};
+  this._depTree = {};
   this._walk(shrinkwrap);
 }
 
 
-HashMap.prototype.rangeMap = function() {
-  return this._rangeMap;
+HashMap.prototype.ranges = function() {
+  return this._ranges;
 };
 
 
-HashMap.prototype.depsTree = function() {
-  return this._depsTree;
+HashMap.prototype.depTree = function() {
+  return this._depTree;
 };
 
 
@@ -36,8 +36,8 @@ HashMap.prototype._walk = function(node) {
     this._addRange(name, range, version);
   }
 
-  var depsTree = this._depsTree;
-  var pkg = depsTree[name] || (depsTree[name] = {});
+  var depTree = this._depTree;
+  var pkg = depTree[name] || (depTree[name] = {});
   if (version in pkg) {
     return;
   }
@@ -69,8 +69,8 @@ HashMap.prototype._addDeps = function(host, dependencies) {
 
 
 HashMap.prototype._addRange = function (name, range, version) {
-  var rangeMap = this._rangeMap;
-  var pkg = rangeMap[name] || (rangeMap[name] = {});
+  var ranges = this._ranges;
+  var pkg = ranges[name] || (ranges[name] = {});
 
   // already exists, skip
   if (range in pkg) {
