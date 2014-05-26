@@ -1,6 +1,6 @@
 {
   "name": "neuron-hashmaps",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Utilities to generate range map and dependency tree for neuron.",
   "main": "index.js",
   "scripts": {

@@ -16,34 +16,28 @@ function HashMap (shrinkwrap) {
   });
 
   var self = this;
-  Object.keys(tree).forEach(function (name) {
-    var versions = tree[name];
+  this._each(tree, function (name, version, info) {
+    var sub_dep_tree = dep_tree[name];
 
-    Object.keys(versions).forEach(function (version) {
-      var sub_dep_tree = dep_tree[name];
-
-      if (sub_dep_tree) {
-        // already parsed
-        if (version in sub_dep_tree) {
-          return;
-        }
-      }
-
-      var info = versions[version];
-
-      // There's no dependencies, i.e. no subtle trees
-      if (!info.dependencies && !info.asyncDependencies) {
+    if (sub_dep_tree) {
+      // already parsed
+      if (version in sub_dep_tree) {
         return;
       }
+    }
 
-      sub_dep_tree = sub_dep_tree || (dep_tree[name] = {});
+    // There's no dependencies, i.e. no subtle trees
+    if (!info.dependencies && !info.asyncDependencies) {
+      return;
+    }
 
-      var deps = {};
-      var async_deps = {};
-      sub_dep_tree[version] = [deps, async_deps];
-      self._addDeps(deps, info.dependencies);
-      self._addDeps(async_deps, info.asyncDependencies);
-    });
+    sub_dep_tree = sub_dep_tree || (dep_tree[name] = {});
+
+    var deps = {};
+    var async_deps = {};
+    sub_dep_tree[version] = [deps, async_deps];
+    self._addDeps(deps, info.dependencies);
+    self._addDeps(async_deps, info.asyncDependencies);
   });
 }
 
@@ -64,16 +58,23 @@ HashMap.prototype._addDeps = function(host, dependencies) {
   }
 
   var self = this;
-  Object.keys(dependencies).forEach(function (name) {
-    var ranges = dependencies[name];
-    Object.keys(ranges).forEach(function (range) {
-      var version = ranges[range];
-      console.log(range, version, name)
-      // adds into dependency tree
-      host[name] = range;
+  this._each(dependencies, function (name, range, version) {
+    // adds into dependency tree
+    host[name] = range;
 
-      // adds to range map
-      self._addRange(name, range, version);
+    // adds to range map
+    self._addRange(name, range, version);
+  });
+};
+
+
+// Each, depth: 2
+HashMap.prototype._each = function(object, callback) {
+  Object.keys(object).forEach(function (a) {
+    var _a = object[a];
+    Object.keys(_a).forEach(function (b) {
+      var c = _a[b];
+      callback(a, b, c);
     });
   });
 };
