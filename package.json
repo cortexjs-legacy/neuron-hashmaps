@@ -1,6 +1,6 @@
 {
   "name": "neuron-hashmaps",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Utilities to generate range map for neuron.",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,7 @@
   "keywords": [
     "neuron-hashmaps"
   ],
-  "engines": { 
+  "engines": {
     "node": ">=0.11.0"
   },
   "author": "kael",
@@ -23,6 +23,9 @@
   },
   "devDependencies": {
     "mocha": "*",
-    "chai": "*"
+    "chai": "*",
+    "jsonfile": "~1.1.1"
+  },
+  "dependencies": {
   }
 }
