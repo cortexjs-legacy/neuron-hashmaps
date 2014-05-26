@@ -30,8 +30,10 @@ HashMap.prototype._walk = function(node) {
   var version = node.version;
 
   if (node.from) {
-    range = this._pasePkg(node.from).range;
-    this._addRange();
+    var parsed = this._parsePkg(node.from);
+    var range = parsed.range;
+    name = parsed.name;
+    this._addRange(name, range, version);
   }
 
   var depsTree = this._depsTree;
@@ -59,13 +61,14 @@ HashMap.prototype._addDeps = function(host, dependencies) {
 
   for (name in dependencies) {
     node = dependencies[name];
-    range = this._parsePkg(node.from);
+    range = this._parsePkg(node.from).range;
     host[name] = range;
+    this._walk(node);
   }
 };
 
 
-hashMap.prototype._addRange = function (name, range, version) {
+HashMap.prototype._addRange = function (name, range, version) {
   var rangeMap = this._rangeMap;
   var pkg = rangeMap[name] || (rangeMap[name] = {});
 
