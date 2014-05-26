@@ -16,6 +16,15 @@ var hashmaps = require('neuron-hashmaps');
 
 ## hashmaps(shrinkwrap)
 
+```js
+var hm = hashmaps(shrink_json);
+var neuron_text = util.format(
+  'neuron.config({ranges: %s, depTree: %s});',
+  JSON.stringify(hm.ranges()),
+  JSON.stringify(hm.depTree())
+);
+```
+
 - shrinkwrap `Object` the object of the shrinkwrap.json
 
 Initializes the hashmaps from the shrinkwrap object
