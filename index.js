@@ -2,16 +2,49 @@
 
 module.exports = hashmap;
 
+var shrinked = require('shrinked');
 
 function hashmap (shrinkwrap) {
   return new HashMap(shrinkwrap);
 }
 
 function HashMap (shrinkwrap) {
-  this.shrinkwrap = shrinkwrap;
-  this._ranges = {};
-  this._depTree = {};
-  this._walk(shrinkwrap);
+  var ranges = this._ranges = {};
+  var dep_tree = this._depTree = {};
+  var tree = shrinked.parse(shrinkwrap, {
+    dependencyKeys: ['dependencies', 'asyncDependencies']
+  });
+
+  var self = this;
+  Object.keys(tree).forEach(function (name) {
+    var versions = tree[name];
+
+    Object.keys(versions).forEach(function (version) {
+      var sub_dep_tree = dep_tree[name];
+
+      if (sub_dep_tree) {
+        // already parsed
+        if (version in sub_dep_tree) {
+          return;
+        }
+      }
+
+      var info = versions[version];
+
+      // There's no dependencies, i.e. no subtle trees
+      if (!info.dependencies && !info.asyncDependencies) {
+        return;
+      }
+
+      sub_dep_tree = sub_dep_tree || (dep_tree[name] = {});
+
+      var deps = {};
+      var async_deps = {};
+      sub_dep_tree[version] = [deps, async_deps];
+      self._addDeps(deps, info.dependencies);
+      self._addDeps(async_deps, info.asyncDependencies);
+    });
+  });
 }
 
 
@@ -25,46 +58,24 @@ HashMap.prototype.depTree = function() {
 };
 
 
-HashMap.prototype._walk = function(node) {
-  var name = node.name;
-  var version = node.version;
-
-  if (node.from) {
-    var parsed = this._parsePkg(node.from);
-    var range = parsed.range;
-    name = parsed.name;
-    this._addRange(name, range, version);
-  }
-
-  var depTree = this._depTree;
-  var pkg = depTree[name] || (depTree[name] = {});
-  if (version in pkg) {
-    return;
-  }
-
-  var deps = {};
-  var asyncDeps = {};
-  pkg[version] = [deps, asyncDeps];
-  this._addDeps(deps, node.dependencies);
-  this._addDeps(asyncDeps, node.asyncDependencies);
-};
-
-
 HashMap.prototype._addDeps = function(host, dependencies) {
   if (!dependencies) {
     return;
   }
 
-  var name;
-  var node;
-  var range;
+  var self = this;
+  Object.keys(dependencies).forEach(function (name) {
+    var ranges = dependencies[name];
+    Object.keys(ranges).forEach(function (range) {
+      var version = ranges[range];
+      console.log(range, version, name)
+      // adds into dependency tree
+      host[name] = range;
 
-  for (name in dependencies) {
-    node = dependencies[name];
-    range = this._parsePkg(node.from).range;
-    host[name] = range;
-    this._walk(node);
-  }
+      // adds to range map
+      self._addRange(name, range, version);
+    });
+  });
 };
 
 
@@ -80,18 +91,3 @@ HashMap.prototype._addRange = function (name, range, version) {
   pkg[range] = version;
 };
 
-
-// 'a@~0.2.3'
-// -> 
-// {
-//   name: 'a',
-//   range: '~0.2.3'
-// }
-HashMap.prototype._parsePkg = function(pkg) {
-  var split = pkg.split('@');
-
-  return {
-    name: split[0],
-    range: split[1]
-  };
-};
