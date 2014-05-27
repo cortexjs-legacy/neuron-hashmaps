@@ -20,8 +20,8 @@ var hashmaps = require('neuron-hashmaps');
 var hm = hashmaps(shrink_json);
 var neuron_text = util.format(
   'neuron.config({ranges: %s, depTree: %s});',
-  JSON.stringify(hm.ranges()),
-  JSON.stringify(hm.depTree())
+  JSON.stringify(hm.ranges),
+  JSON.stringify(hm.depTree)
 );
 ```
 
@@ -29,16 +29,52 @@ var neuron_text = util.format(
 
 Initializes the hashmaps from the shrinkwrap object
 
-### .ranges()
+### .ranges
+
+```js
+jquery: {
+  '~1.9.0': '1.9.3'
+},
+```
 
 Returns `Object` the range map which is the value of `neuron.config.ranges`
 
 Gets the current range map.
 
+### .depTree
 
-### .depTree()
+```js
+mbox: [
+  // dependencies
+  {
+    jquery: '~1.9.0'
+  },
+  // async dependencies
+  {
+    hippo: '~1.0.0'
+  }
+],
+```
 
 Returns `Object` the deps tree which is the value of `neuron.config.depTree`
+
+### .engines(name, version)
+
+```js
+[
+  {
+    name: 'neuron',
+    version: '5.0.0'
+  },
+  ...
+]
+```
+
+- name `String`
+- version `String`
+
+Returns `Array` the engines of the specified package.
+
 
 ## License
 
