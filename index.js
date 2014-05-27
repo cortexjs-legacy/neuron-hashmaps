@@ -63,6 +63,10 @@ hashmap._addDeps = function(ranges, dependencies, host) {
   }
 
   hashmap._each(dependencies, function (name, range, version) {
+    if (range === '*') {
+      range = 'latest';
+    }
+    
     if (host) {
       // adds into dependency tree
       host[name] = range;
