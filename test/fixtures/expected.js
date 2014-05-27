@@ -24,6 +24,10 @@
 //       "from": "c@~2.0.0", 
 //       "// commments": "this is a version different from the c of b's dependencies",
 //       "version": "2.0.10"
+//     },
+//     "e": {
+//       "from": "e@*",
+//       "version": "4.0.2"
 //     }
 //   }
 // }
@@ -41,6 +45,9 @@ module.exports = {
     },
     neuron: {
       '~5.0.0': '5.0.0'
+    },
+    e: {
+      'latest': '4.0.2'
     }
   },
   depTree: {
@@ -48,7 +55,8 @@ module.exports = {
       '0.1.0': [
         {
           b: '~1.0.0',
-          c: '~2.0.0'
+          c: '~2.0.0',
+          e: 'latest'
         },
         {}
       ]
