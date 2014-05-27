@@ -38,6 +38,9 @@ module.exports = {
     },
     d: {
       '~3.0.0': '3.0.12'
+    },
+    neuron: {
+      '~5.0.0': '5.0.0'
     }
   },
   depTree: {
@@ -60,5 +63,11 @@ module.exports = {
         }
       ]
     }
-  }
+  },
+  engines: [
+    {
+      name: 'neuron',
+      version: '5.0.0'
+    }
+  ]
 };

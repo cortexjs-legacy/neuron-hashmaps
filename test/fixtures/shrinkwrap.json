@@ -1,6 +1,12 @@
 {
   "name": "a",
   "version": "0.1.0",
+  "engines": {
+    "neuron": {
+      "from": "neuron@~5.0.0",
+      "version": "5.0.0"
+    }
+  },
   "dependencies": {
     "b": {
       "from": "b@~1.0.0",
